@@ -78,7 +78,7 @@ if __name__ == "__main__":
     # Remember to empty the list when going to commit to GitHub.
     # Otherwise they will all be reverted and you will have to re-create them
     # I would advise to create more than one token for repos with heavy commits
-    lstTokens = ["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"]
+    lstTokens = ["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"]
 
     dictfiles = dict()
     countfiles(dictfiles, lstTokens, repo)
