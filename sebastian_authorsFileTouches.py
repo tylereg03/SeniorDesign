@@ -24,7 +24,7 @@ def get_source_files(repo, lstTokens):
     jsonData, ct = github_auth(url, lstTokens, ct)
     if jsonData:
         for file in jsonData['tree']:
-            if file['type'] == 'blob' and file['path'].endswith(('.py', '.js', '.java', '.cpp', '.c')):
+            if file['type'] == 'blob' and file['path'].endswith(('.py', '.js', '.java', '.cpp', '.c', '.kt')):
                 files.append(file['path'])
     return files
 
@@ -41,7 +41,7 @@ def get_commit_history(file, repo, lstTokens):
     return commit_history
 
 def main():
-    lstTokens = ["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"]  # Add your GitHub tokens here
+    lstTokens = [""]
     fileOutput = 'data/file_' + repo.split('/')[1] + '.csv'
 
     if not os.path.exists('data'):
