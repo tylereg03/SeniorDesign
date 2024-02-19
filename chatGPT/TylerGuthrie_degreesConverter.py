@@ -1,55 +1,48 @@
 import sys
 
-numArgs = len(sys.argv)
+# Conversion functions
+def fahrenheit_to_celsius(fahrenheit):
+    return (fahrenheit - 32) * (5/9)
 
-if numArgs < 3:
-    print("Too few arguments passed!\nUsage: python3 degreesConverter.py degrees unit(capital)\n")
+def fahrenheit_to_kelvin(fahrenheit):
+    return (fahrenheit - 32) * (5/9) + 273.15
+
+def celsius_to_fahrenheit(celsius):
+    return (celsius * (9/5)) + 32
+
+def celsius_to_kelvin(celsius):
+    return celsius + 273.15
+
+def kelvin_to_fahrenheit(kelvin):
+    return (kelvin - 273.15) * (9/5) + 32
+
+def kelvin_to_celsius(kelvin):
+    return kelvin - 273.15
+
+# Check for correct number of command-line arguments
+if len(sys.argv) != 3:
+    print("Invalid number of arguments!\nUsage: python3 degreesConverter.py degrees unit(capital)")
     sys.exit()
 
-if numArgs > 3:
-    print("Too many arguments passed!\nUsage: python3 degreesConverter.py degrees unit(capital)\n")
-    sys.exit()
-
+# Extract arguments
 degrees = float(sys.argv[1])
-degreesFahrenheit = 0.0
-degreesCelcius = 0.0
-degreesKelvin = 0.0
-isF = False
-isC = False
-isK = False
+unit = sys.argv[2]
 
-if sys.argv[2] == 'F':
-    degreesCelcius = (degrees - 32) * (5/9)
-    degreesKelvin = (degrees - 32) * (5/9) + 273.15
-    isF = True
-elif sys.argv[2] == 'C':
-    degreesFahrenheit = (degrees * (9/5)) + 32
-    degreesKelvin = degrees + 273.15
-    isC = True
-elif sys.argv[2] == 'K':
-    degreesFahrenheit = (degrees - 273.15) * (9/5) + 32
-    degreesCelcius = degrees - 273.15
-    isK = True
+# Conversion based on the provided unit
+if unit == 'F':
+    print("Celsius:")
+    print(fahrenheit_to_celsius(degrees))
+    print("\nKelvin:")
+    print(fahrenheit_to_kelvin(degrees))
+elif unit == 'C':
+    print("Fahrenheit:")
+    print(celsius_to_fahrenheit(degrees))
+    print("\nKelvin:")
+    print(celsius_to_kelvin(degrees))
+elif unit == 'K':
+    print("Fahrenheit:")
+    print(kelvin_to_fahrenheit(degrees))
+    print("\nCelsius:")
+    print(kelvin_to_celsius(degrees))
 else:
     print("Invalid unit entered!\nValid units include F, C, and K")
-    sys.exit()
-
-if isF == True:
-    print("Celcius: ")
-    print(degreesCelcius)
-    print("\nKelvin: ")
-    print(degreesKelvin)
-    print("\n")
-elif isC == True:
-    print("Fahrenheit: ")
-    print(degreesFahrenheit)
-    print("\nKelvin: ")
-    print(degreesKelvin)
-    print("\n")
-elif isK == True:
-    print("Fahrenheit: ")
-    print(degreesFahrenheit)
-    print("\nCelcius: ")
-    print(degreesCelcius)
-    print("\n")
-
