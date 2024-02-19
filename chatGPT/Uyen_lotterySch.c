@@ -217,3 +217,117 @@ void scheduler(void)
 }
 
 ///...... some code here
+
+// refactoring code with detail comments
+// Define a structure to represent the range of tickets for each process
+struct TicketRange
+{
+    int start; // Start of the ticket range
+    int end;   // End of the ticket range
+};
+
+// Function: calculateTotalTickets
+// -------------------------------
+// Calculates the total number of tickets among all runnable processes.
+// Parameters:
+//    - procs: Pointer to an array of processes
+//    - num_procs: Number of processes in the array
+// Returns:
+//    - The total number of tickets among all runnable processes.
+int calculateTotalTickets(struct proc *procs, int num_procs)
+{
+    int total_tickets = 0;
+    for (int i = 0; i < num_procs; i++)
+    {
+        if (procs[i].state != UNUSED)
+        {
+            total_tickets += procs[i].tickets;
+        }
+    }
+    return total_tickets;
+}
+
+// Function: pickWinner
+// ---------------------
+// Picks the winning process based on a random number and the ticket ranges of processes.
+// Parameters:
+//    - procs: Pointer to an array of processes
+//    - ranges: Pointer to an array of TicketRange structures representing the ticket ranges of processes
+//    - num_procs: Number of processes in the array
+//    - total_tickets: Total number of tickets among all runnable processes
+//    - rand_num: Random number used to pick the winner
+// Returns:
+//    - Pointer to the winning process if found, otherwise returns 0.
+struct proc *pickWinner(struct proc *procs, struct TicketRange *ranges, int num_procs, int total_tickets, int rand_num)
+{
+    for (int i = 0; i < num_procs; i++)
+    {
+        if (procs[i].state == RUNNABLE && rand_num >= ranges[i].start && rand_num <= ranges[i].end)
+        {
+            return &procs[i];
+        }
+    }
+    return 0; // No winner found
+}
+
+// Function: scheduler
+// --------------------
+// Implements a lottery scheduler where processes are assigned tickets,
+// and a winner is chosen randomly. Processes with more tickets have
+// higher chances of winning the lottery.
+// This function continuously runs, selecting a winner based on the number of tickets
+// each process holds. The winner is then scheduled to run by switching the CPU context
+// to the winner's process context.
+void scheduler(void)
+{
+    struct proc *p;              // Pointer to a process
+    struct cpu *c = mycpu();     // Pointer to the current CPU
+    struct proc *winnerProc = 0; // Pointer to the winning process
+    int rand_num = 0;            // Random number generated for lottery
+
+    c->proc = 0; // Clear the current process from the CPU
+    sys_srand(); // Seed the random number generator
+
+    for (;;)
+    {              // Infinite loop for continuous scheduling
+        intr_on(); // Enable interrupts
+
+        // Calculate total tickets and assign ticket ranges
+        int total_tickets = calculateTotalTickets(proc, NPROC); // Total number of tickets among all processes
+        struct TicketRange ranges[NPROC];                       // Array to store ticket ranges for each process
+        int current_ticket = 0;                                 // Counter for current ticket allocation
+        for (int i = 0; i < NPROC; i++)
+        {
+            if (proc[i].state != UNUSED)
+            {
+                // Assign ticket range for each process
+                ranges[i].start = current_ticket;
+                ranges[i].end = current_ticket + proc[i].tickets - 1;
+                current_ticket = ranges[i].end + 1;
+            }
+        }
+
+        // If there are runnable processes with tickets, proceed with lottery selection
+        if (total_tickets != 0)
+        {
+            rand_num = sys_srand() % total_tickets;                                // Generate a random number within the range of total tickets
+            winnerProc = pickWinner(proc, ranges, NPROC, total_tickets, rand_num); // Select the winner process
+        }
+
+        // If a winner is found, acquire its lock and switch to its context to execute
+        if (winnerProc != 0)
+        {
+            acquire(&winnerProc->lock); // Acquire lock to prevent race conditions
+            if (winnerProc->state == RUNNABLE)
+            {
+                // Set the state of the winner process to RUNNING
+                winnerProc->state = RUNNING;
+                // Switch the CPU context to the winner process context
+                c->proc = winnerProc;
+                swtch(&c->context, &winnerProc->context); // Perform context switch
+                c->proc = 0;                              // Clear the CPU process after context switch
+            }
+            release(&winnerProc->lock); // Release the lock after executing the winner process
+        }
+    }
+}
