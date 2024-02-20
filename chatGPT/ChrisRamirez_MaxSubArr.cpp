@@ -28,22 +28,26 @@ using std::vector;
 
 int maxSubArray(std::vector<int>& nums) {
     int n = nums.size();
-    
+
+    // Check if the input vector is empty
     if (n == 0) {
-        // Handle the case when the input vector is empty
         return 0;
     }
 
-    int maxSum = nums[0];
-    int currentSum = nums[0];
+    // Initialize variables to keep track of the maximum subarray sum
+    int maxSum = nums[0];      // Overall maximum subarray sum
+    int currentSum = nums[0];  // Maximum subarray sum ending at the current position
 
+    // Iterate through the array starting from the second element
     for (int i = 1; i < n; ++i) {
         // Choose between extending the current subarray or starting a new one
+        // If extending the current subarray results in a negative sum, start a new subarray
         currentSum = std::max(nums[i], currentSum + nums[i]);
-        
-        // Update the maximum subarray sum
+
+        // Update the overall maximum subarray sum
         maxSum = std::max(maxSum, currentSum);
     }
 
+    // Return the overall maximum subarray sum
     return maxSum;
 }
