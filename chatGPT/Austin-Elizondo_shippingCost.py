@@ -1,13 +1,15 @@
 def calculate_shipping_cost(weight, distance):
     """Calculate the shipping cost."""
-    if weight <= 5:
-        return weight * 2 * distance
-    elif weight > 5 and weight <= 20:
-        return weight * 3 * distance
-    elif weight > 20 and weight <= 50:
-        return weight * 5 * distance
-    else:
-        return weight * 7 * distance
+    shipping_rates = {
+        (0, 5): 2,
+        (6, 20): 3,
+        (21, 50): 5,
+        (51, float('inf')): 7
+    }
+    for (min_weight, max_weight), rate in shipping_rates.items():
+        if min_weight <= weight <= max_weight:
+            return weight * rate * distance
+    return 0  # Return 0 if weight exceeds the maximum range
 
 def calculate_tax(price, tax_rate):
     """Calculate the tax."""
