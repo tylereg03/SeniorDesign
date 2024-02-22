@@ -1,103 +1,111 @@
 import sys
 import random
-from random import randint
 
+# Conversion functions
+
+# Pound conversions
 def pound_to_ounce(weight):
-    return weight*16
+    return weight * 16
 
 def pound_to_kilogram(weight):
-    return weight/2.205
+    return weight / 2.205
 
 def pound_to_gram(weight):
-    return weight*453.6
+    return weight * 453.6
 
 def pound_to_ton(weight):
-    return weight/2205
+    return weight / 2205
 
 def pound_to_stone(weight):
-    return weight/14
+    return weight / 14
 
+# Ounce conversions
 def ounce_to_pound(weight):
-    return weight/16
+    return weight / 16
 
 def ounce_to_kilogram(weight):
-    return weight/35.274
+    return weight / 35.274
 
 def ounce_to_gram(weight):
-    return weight*28.35
+    return weight * 28.35
 
 def ounce_to_ton(weight):
-    return weight/35270
+    return weight / 35270
 
 def ounce_to_stone(weight):
-    return weight/224
+    return weight / 224
 
+# Kilogram conversions
 def kilogram_to_pound(weight):
-    return weight*2.205
+    return weight * 2.205
 
 def kilogram_to_ounce(weight):
-    return weight*35.274
+    return weight * 35.274
 
 def kilogram_to_gram(weight):
-    return weight*1000
+    return weight * 1000
 
 def kilogram_to_ton(weight):
-    return weight/1000
+    return weight / 1000
 
 def kilogram_to_stone(weight):
-    return weight/6.35
+    return weight / 6.35
 
+# Gram conversions
 def gram_to_pound(weight):
-    return weight/453.6
+    return weight / 453.6
 
 def gram_to_ounce(weight):
-    return weight/28.35
+    return weight / 28.35
 
 def gram_to_kilogram(weight):
-    return weight*1000
+    return weight / 1000
 
 def gram_to_ton(weight):
-    return weight/1000000
+    return weight / 1000000
 
 def gram_to_stone(weight):
-    return weight/6350
+    return weight / 6350
 
+# Ton conversions
 def ton_to_pound(weight):
-    return weight*2205
+    return weight * 2205
 
 def ton_to_ounce(weight):
-    return weight*35270
+    return weight * 35270
 
 def ton_to_kilogram(weight):
-    return weight*1000
+    return weight * 1000
 
 def ton_to_gram(weight):
-    return weight*1000000
+    return weight * 1000000
 
 def ton_to_stone(weight):
-    return weight*157.5
+    return weight * 157.5
 
+# Stone conversions
 def stone_to_pound(weight):
-    return weight*14
+    return weight * 14
 
 def stone_to_ounce(weight):
-    return weight*224
+    return weight * 224
 
 def stone_to_kilogram(weight):
-    return weight*6.35
+    return weight * 6.35
 
 def stone_to_gram(weight):
-    return weight*6350
+    return weight * 6350
 
 def stone_to_ton(weight):
-    return weight/157.5
+    return weight / 157.5
 
-isRandom = False
+is_random = False
 
+# Check command-line arguments
 if len(sys.argv) != 3:
     if len(sys.argv) == 2:
         if sys.argv[1] == "RANDOM":
-            isRandom = True
+            is_random = True
         else:
             print("Welcome to the weight converter!")
             print("To use, either do: ")
@@ -105,11 +113,13 @@ if len(sys.argv) != 3:
             print("python3 TylerGuthrie_weightConverter.py RANDOM for a random value")
             sys.exit()
 
-if isRandom:
+# If RANDOM option is chosen, select a random weight and unit
+if is_random:
     units = ["POUND", "OUNCE", "KILOGRAM", "GRAM", "TON", "STONE"]
-    weight = float(randint(1, 100))
+    weight = float(random.randint(1, 100))
     unit = random.choice(units)
 else:
+    # Otherwise, get weight and unit from command-line arguments
     try:
         weight = float(sys.argv[1])
         unit = sys.argv[2]
@@ -117,6 +127,7 @@ else:
         print("Invalid use of RANDOM!\nUsage: python3 TylerGuthrie_weightConverter.py RANDOM")
         sys.exit()
 
+# Perform the conversion based on the selected unit
 if unit == "POUND":
     print(weight, unit)
     print("Ounce: ", pound_to_ounce(weight))
@@ -161,6 +172,3 @@ elif unit == "STONE":
     print("Metric Ton: ", stone_to_ton(weight))
 else:
     print("Invalid unit entered!\nValid units include POUND, OUNCE, KILOGRAM, GRAM, TON, STONE")
-
-
-
